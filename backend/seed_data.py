@@ -277,39 +277,85 @@ def seed_database():
             remarks="Stock adjustment ADJ-00001: counted 27.0, recorded 30.0 (diff -3.00)"
         ))
 
-        # Additional live pending operations for dashboard test:
-        # Pending Receipt
+        # Additional live pending operations for video recording demo:
+        # 1. Receipt in "waiting" state (ready for 1-click "Validate")
         op_rec2 = StockOperation(
             reference="REC-00002",
             type="receipt",
-            status="draft",
+            status="waiting",
             dest_location_id=loc_main.id,
             supplier_name="Apex Micro Systems",
-            notes="Next-gen sensor delivery pending gate verification",
+            notes="Inbound electronics shipment verified at dock",
             created_by=admin_user.id,
             scheduled_date=now + timedelta(days=1),
             created_at=now - timedelta(hours=4)
         )
         db.add(op_rec2)
         db.flush()
-        db.add(StockMoveLine(operation_id=op_rec2.id, product_id=p_iot.id, demand_qty=50.0, done_qty=0.0))
+        db.add(StockMoveLine(operation_id=op_rec2.id, product_id=p_iot.id, demand_qty=50.0, done_qty=50.0))
 
-        # Delivery in "ready" state
-        op_del2 = StockOperation(
+        # 2. Receipt in "draft" state
+        op_rec3 = StockOperation(
+            reference="REC-00003",
+            type="receipt",
+            status="draft",
+            dest_location_id=loc_main.id,
+            supplier_name="Northern Industrial Supplies",
+            notes="Scheduled raw steel shipment awaiting delivery",
+            created_by=admin_user.id,
+            scheduled_date=now + timedelta(days=2),
+            created_at=now - timedelta(hours=2)
+        )
+        db.add(op_rec3)
+        db.flush()
+        db.add(StockMoveLine(operation_id=op_rec3.id, product_id=p_steel.id, demand_qty=80.0, done_qty=0.0))
+
+        # 3. Delivery in "draft" state (ready for "Pick" -> waiting)
+        op_del_draft = StockOperation(
             reference="DEL-00002",
             type="delivery",
-            status="ready",
+            status="draft",
             source_location_id=loc_main.id,
-            notes="Express shipment for TechPark Inc. - Packed and waiting for carrier pickup",
+            notes="TechPark Inc. - Priority Electronics Batch",
+            created_by=admin_user.id,
+            scheduled_date=now + timedelta(hours=4),
+            created_at=now - timedelta(hours=3)
+        )
+        db.add(op_del_draft)
+        db.flush()
+        db.add(StockMoveLine(operation_id=op_del_draft.id, product_id=p_iot.id, demand_qty=10.0, done_qty=0.0))
+
+        # 4. Delivery in "waiting" state (ready for "Pack" -> ready)
+        op_del_waiting = StockOperation(
+            reference="DEL-00003",
+            type="delivery",
+            status="waiting",
+            source_location_id=loc_main.id,
+            notes="Metro Builders - Heavy Construction Order",
             created_by=staff_user.id,
             scheduled_date=now + timedelta(hours=3),
+            created_at=now - timedelta(hours=5)
+        )
+        db.add(op_del_waiting)
+        db.flush()
+        db.add(StockMoveLine(operation_id=op_del_waiting.id, product_id=p_steel.id, demand_qty=15.0, done_qty=15.0))
+
+        # 5. Delivery in "ready" state (ready for "Validate & Ship" -> done)
+        op_del_ready = StockOperation(
+            reference="DEL-00004",
+            type="delivery",
+            status="ready",
+            source_location_id=loc_pack.id,
+            notes="Swift Delivery Hub - Packaged Shipping Containers",
+            created_by=staff_user.id,
+            scheduled_date=now + timedelta(hours=1),
             created_at=now - timedelta(hours=6)
         )
-        db.add(op_del2)
+        db.add(op_del_ready)
         db.flush()
-        db.add(StockMoveLine(operation_id=op_del2.id, product_id=p_iot.id, demand_qty=15.0, done_qty=15.0))
+        db.add(StockMoveLine(operation_id=op_del_ready.id, product_id=p_box.id, demand_qty=50.0, done_qty=50.0))
 
-        # Scheduled internal transfer in "waiting" state
+        # 6. Scheduled internal transfer in "waiting" state
         op_trf2 = StockOperation(
             reference="TRF-00002",
             type="internal",

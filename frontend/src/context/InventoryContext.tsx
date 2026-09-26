@@ -17,6 +17,7 @@ import { useToast } from './ToastContext';
 import { useAuth } from './AuthContext';
 import {
   productsApi,
+  categoriesApi,
   warehousesApi,
   receiptsApi,
   deliveriesApi,
@@ -26,10 +27,12 @@ import {
   dashboardApi,
   LocationItem,
   ProductItem,
+  CategoryItem,
 } from '../api/services';
 
 interface InventoryContextType {
   products: Product[];
+  categories: CategoryItem[];
   locations: LocationCapacity[];
   movements: StockMovement[];
   receipts: Receipt[];
@@ -100,6 +103,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const { isAuthenticated, token } = useAuth();
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [locations, setLocations] = useState<LocationCapacity[]>([]);
   const [rawLocations, setRawLocations] = useState<LocationItem[]>([]);
   const [movements, setMovements] = useState<StockMovement[]>([]);
@@ -124,6 +128,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         transfersRes,
         adjustmentsRes,
         movesRes,
+        catsRes,
       ] = await Promise.allSettled([
         productsApi.getProducts(),
         warehousesApi.getLocations(),
@@ -132,7 +137,13 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         transfersApi.getTransfers(),
         adjustmentsApi.getAdjustments(),
         movesApi.getMoves(),
+        categoriesApi.getCategories(),
       ]);
+
+      // 0. Process Categories
+      if (catsRes.status === 'fulfilled') {
+        setCategories(catsRes.value);
+      }
 
       // 1. Process Locations
       let currentRawLocs: LocationItem[] = [];
@@ -299,25 +310,41 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Operational Action Handlers
   // ==========================================
 
-  // Helper to find location ID by name or default
+  // Helper to find location ID by name, code, or default
   const getLocationId = (locName?: string): number => {
     if (locName && rawLocations.length > 0) {
+      const trimmed = locName.trim().toLowerCase();
       const found = rawLocations.find(
-        (l) => `${l.warehouse_name} - ${l.name}` === locName || l.name === locName
+        (l) =>
+          `${l.warehouse_name} - ${l.name}`.toLowerCase() === trimmed ||
+          l.name.toLowerCase() === trimmed ||
+          l.code.toLowerCase() === trimmed ||
+          trimmed.startsWith(`${l.warehouse_name} - ${l.name}`.toLowerCase())
       );
       if (found) return found.id;
     }
     return rawLocations[0]?.id || 1;
   };
 
+  // Helper to find category ID by name or default
+  const getCategoryId = (catName?: string): number => {
+    if (catName && categories.length > 0) {
+      const trimmed = catName.trim().toLowerCase();
+      const found = categories.find((c) => c.name.toLowerCase() === trimmed);
+      if (found) return found.id;
+    }
+    return categories[0]?.id || 1;
+  };
+
   // Add Product
   const addProduct = async (newProd: Omit<Product, 'id' | 'status' | 'lastUpdated'>) => {
     try {
       const locId = getLocationId(newProd.location);
+      const catId = getCategoryId(newProd.category);
       await productsApi.createProduct({
         name: newProd.name,
         sku: newProd.sku,
-        category_id: 1, // Default General Category
+        category_id: catId,
         unit_of_measure: newProd.unit || 'units',
         reorder_level: Number(newProd.reorderLevel) || 10,
         reorder_qty: 25,
@@ -544,6 +571,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <InventoryContext.Provider
       value={{
         products,
+        categories,
         locations,
         movements,
         receipts,

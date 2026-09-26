@@ -17,11 +17,13 @@ import {
 import { warehousesApi, WarehouseItem, LocationItem } from '../../api/services';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
+import { useInventory } from '../../context/InventoryContext';
 import { Modal } from '../ui/Modal';
 
 export const WarehouseSettingsSection: React.FC = () => {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { refreshData } = useInventory();
   const isManager = user?.role === 'inventory_manager';
 
   const [warehouses, setWarehouses] = useState<WarehouseItem[]>([]);
@@ -89,6 +91,7 @@ export const WarehouseSettingsSection: React.FC = () => {
       setWhAddress('');
       setIsAddWhModalOpen(false);
       await loadData();
+      await refreshData();
     } catch (err: any) {
       showToast('Creation Failed', err.message || 'Could not create warehouse.', 'error');
     } finally {
@@ -116,6 +119,7 @@ export const WarehouseSettingsSection: React.FC = () => {
       setLocCode('');
       setIsAddLocModalOpen(false);
       await loadData();
+      await refreshData();
     } catch (err: any) {
       showToast('Creation Failed', err.message || 'Could not add storage location.', 'error');
     } finally {
@@ -132,6 +136,7 @@ export const WarehouseSettingsSection: React.FC = () => {
       await warehousesApi.deleteWarehouse(id);
       showToast('Deleted', `Warehouse '${name}' deleted.`, 'info');
       await loadData();
+      await refreshData();
     } catch (err: any) {
       showToast('Cannot Delete', err.message || 'Warehouse has active inventory or records.', 'error');
     }

@@ -18,7 +18,7 @@ import { useToast } from '../../context/ToastContext';
 import { Modal } from '../ui/Modal';
 
 export const CategoriesSection: React.FC = () => {
-  const { products } = useInventory();
+  const { products, refreshData } = useInventory();
   const { user } = useAuth();
   const { showToast } = useToast();
   const isManager = user?.role === 'inventory_manager';
@@ -70,6 +70,7 @@ export const CategoriesSection: React.FC = () => {
       setCatDescription('');
       setIsAddModalOpen(false);
       await loadCategories();
+      await refreshData();
     } catch (err: any) {
       showToast('Creation Error', err.message || 'Could not create category.', 'error');
     } finally {
@@ -86,6 +87,7 @@ export const CategoriesSection: React.FC = () => {
       await categoriesApi.deleteCategory(id);
       showToast('Category Deleted', `Category '${name}' deleted.`, 'info');
       await loadCategories();
+      await refreshData();
       if (selectedCategory === name) {
         setSelectedCategory(null);
       }

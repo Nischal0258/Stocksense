@@ -28,7 +28,7 @@ import { ReorderRulesSection } from './ReorderRulesSection';
 type ProductSubTab = 'catalog' | 'locations' | 'categories' | 'reorder-rules';
 
 export const ProductsTableSection: React.FC = () => {
-  const { products, deleteProduct, updateProduct, setActiveModal } = useInventory();
+  const { products, deleteProduct, updateProduct, setActiveModal, categories: contextCategories } = useInventory();
   const { user } = useAuth();
   const isManager = user?.role === 'inventory_manager';
 
@@ -40,7 +40,12 @@ export const ProductsTableSection: React.FC = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   // Categories list
-  const categories = Array.from(new Set(products.map((p) => p.category)));
+  const categories = Array.from(
+    new Set([
+      ...(contextCategories || []).map((c) => c.name),
+      ...products.map((p) => p.category),
+    ])
+  ).filter(Boolean);
 
   // Filter products
   const filteredProducts = products.filter((p) => {

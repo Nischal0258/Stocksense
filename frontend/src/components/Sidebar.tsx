@@ -118,19 +118,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ${isCollapsed ? 'w-20' : 'w-64'}`}
       >
         {/* Top Header / Branding */}
-        <div className="h-20 flex items-center justify-between px-4 border-b border-[#EEE8E3]/80">
-          <div className="overflow-hidden">
+        <div
+          className={`h-20 flex items-center border-b border-[#EEE8E3]/80 relative transition-all duration-300 ${
+            isCollapsed ? 'justify-center px-2' : 'justify-between px-4'
+          }`}
+        >
+          <div className="flex items-center justify-center min-w-0">
             <AppLogo collapsed={isCollapsed} />
           </div>
 
           {/* Collapse Toggle Button (Hidden on Mobile) */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-[#686878] hover:text-[#242633] hover:bg-[#EEE8E3] transition-colors"
+            className={`hidden lg:flex items-center justify-center text-[#686878] hover:text-[#242633] transition-colors ${
+              isCollapsed
+                ? 'absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border border-[#EEE8E3] shadow-md hover:bg-[#F7F3F0] z-50'
+                : 'w-7 h-7 rounded-lg hover:bg-[#EEE8E3]'
+            }`}
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            {isCollapsed ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
