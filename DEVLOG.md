@@ -401,7 +401,35 @@ StockSense/
 
 <!-- DEV 2: ADD YOUR LOG ENTRIES BELOW THIS LINE -->
 
+### F1 — Workspace Alignment & Setup — 2026-09-26 12:48
+- Moved frontend assets from `stocksense-main/` to `frontend/` matching agreed team repository structure.
+- Configured `frontend/package.json` to run on port `5173`.
+- Installed dependencies and verified clean production build with Vite.
 
+### F2 — Typed API Client & Auth Context — 2026-09-26 12:57
+- Created `frontend/src/api/client.ts` with automatic Bearer token injection and centralized error handling.
+- Created `frontend/src/api/services.ts` providing full TypeScript types and endpoint services matching `API_CONTRACT.md`.
+- Implemented `frontend/src/context/AuthContext.tsx` with persistent localStorage sessions, login, signup, role state, and demo login helpers.
+
+### F3 — Simple Sign-In / Sign-Up Page & Role Switcher — 2026-09-26 13:02
+- Built `frontend/src/components/auth/AuthPage.tsx` with clean card layout, Sign In, Sign Up, and OTP password recovery.
+- Added one-click **Demo Manager** (`admin@stocksense.com`) and **Demo Staff** (`staff@stocksense.com`) access.
+- Updated `frontend/src/components/Topbar.tsx` with interactive profile dropdown, role badge, live role switching between Manager and Staff, and logout.
+
+### F4 — Live Backend API Integration — 2026-09-26 13:08
+- Replaced mock in-memory arrays in `frontend/src/context/InventoryContext.tsx` with live data fetching from FastAPI backend (`/api/products`, `/api/receipts`, `/api/deliveries`, `/api/transfers`, `/api/adjustments`, `/api/moves`, `/api/locations`, `/api/dashboard/kpis`).
+- Connected all operation forms:
+  - Product creation with initial stock and location mapping.
+  - Inbound receipt creation and validation committing stock to ledger.
+  - Outbound delivery staging, pick, pack, and validate with strict insufficient stock rejection.
+  - Internal transfers preserving total company inventory.
+  - Physical cycle count adjustments logging variance notes.
+
+### F5 — Verification & End-to-End System Sign-Off — 2026-09-26 13:10
+- Ran full backend test suite: 8/8 tests passed (100% green).
+- Ran frontend typecheck (`npm run lint`): 0 TypeScript errors.
+- Ran frontend production build (`npm run build`): bundle compiled cleanly.
+- Full inventory lifecycle verified end-to-end.
 
 ---
 
@@ -412,11 +440,24 @@ StockSense/
 <!-- INTEGRATION NOTES BELOW -->
 - **Backend Base URL:** `http://localhost:8000`
 - **Interactive OpenAPI Docs:** `http://localhost:8000/docs`
+- **Frontend URL:** `http://localhost:5173`
+- **Running the Full Stack:**
+  1. Terminal 1 (Backend):
+     ```bash
+     cd backend
+     uvicorn app.main:app --reload --port 8000
+     ```
+  2. Terminal 2 (Frontend):
+     ```bash
+     cd frontend
+     npm run dev
+     ```
 - **Default Test Credentials:**
   - Admin (Inventory Manager): `admin@stocksense.com` / `Password123`
   - Staff (Warehouse Staff): `staff@stocksense.com` / `Password123`
+  - Password Reset OTP: `123456`
 - **JWT Header:** All protected endpoints require header `Authorization: Bearer <token>`
 - **CORS:** Configured for Vite frontend at `http://localhost:5173`
-- **Database Seed Command:** Run `python seed_data.py` in `backend/` whenever a clean demo state is required.
+- **Database Reset / Re-seed:** Run `python seed_data.py` in `backend/` to restore clean demonstration data anytime.
 
 
