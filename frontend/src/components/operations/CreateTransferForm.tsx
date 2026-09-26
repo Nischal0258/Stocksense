@@ -21,11 +21,11 @@ export const CreateTransferForm: React.FC<CreateTransferFormProps> = ({ onClose 
   const [quantity, setQuantity] = useState<number | ''>(10);
   const [notes, setNotes] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!productId || !quantity || Number(quantity) <= 0) return;
 
-    const success = createTransfer({
+    const success = await createTransfer({
       productId,
       productName: selectedProduct ? selectedProduct.name : 'Unknown Product',
       fromLocation,

@@ -17,11 +17,11 @@ export const AddProductForm: React.FC<AddProductFormProps> = ({ onClose }) => {
   const [location, setLocation] = useState(locations[0]?.name || 'Main Warehouse');
   const [unitCost, setUnitCost] = useState<number | ''>(15.0);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !sku.trim()) return;
 
-    addProduct({
+    await addProduct({
       name: name.trim(),
       sku: sku.trim().toUpperCase(),
       category,

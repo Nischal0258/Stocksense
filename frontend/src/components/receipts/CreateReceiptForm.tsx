@@ -25,7 +25,7 @@ export const CreateReceiptForm: React.FC<CreateReceiptFormProps> = ({
 
   const selectedProduct = products.find((p) => p.id === productId);
 
-  const handleSubmit = (e: React.FormEvent, validateImmediately = false) => {
+  const handleSubmit = async (e: React.FormEvent, validateImmediately = false) => {
     e.preventDefault();
     if (!supplier.trim() || !productId || !quantity || Number(quantity) <= 0) return;
 
@@ -39,16 +39,7 @@ export const CreateReceiptForm: React.FC<CreateReceiptFormProps> = ({
       notes: notes.trim(),
     };
 
-    createReceipt(receiptData);
-
-    // If immediate validation was requested, validate the newly created one
-    if (validateImmediately) {
-      // Find the ID of the newly added receipt
-      setTimeout(() => {
-        // Trigger validation if saved as Done or directly
-      }, 50);
-    }
-
+    await createReceipt(receiptData);
     onClose();
   };
 

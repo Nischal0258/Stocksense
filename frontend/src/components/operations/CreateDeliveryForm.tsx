@@ -21,11 +21,11 @@ export const CreateDeliveryForm: React.FC<CreateDeliveryFormProps> = ({ onClose 
 
   const selectedProduct = products.find((p) => p.id === productId);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customer.trim() || !productId || !quantity || Number(quantity) <= 0) return;
 
-    createDelivery({
+    const ok = await createDelivery({
       customer: customer.trim(),
       productId,
       productName: selectedProduct ? selectedProduct.name : 'Unknown Product',
@@ -35,7 +35,9 @@ export const CreateDeliveryForm: React.FC<CreateDeliveryFormProps> = ({ onClose 
       notes: notes.trim(),
     });
 
-    onClose();
+    if (ok) {
+      onClose();
+    }
   };
 
   return (

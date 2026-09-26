@@ -25,13 +25,13 @@ export const CreateAdjustmentForm: React.FC<CreateAdjustmentFormProps> = ({
   const countNumber = physicalCount === '' ? 0 : Number(physicalCount);
   const difference = countNumber - recordedQuantity;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!productId || physicalCount === '') return;
 
     const finalReason = reason === 'Other' ? customReason.trim() : reason;
 
-    createAdjustment({
+    await createAdjustment({
       productId,
       productName: selectedProduct.name,
       location: selectedProduct.location,
