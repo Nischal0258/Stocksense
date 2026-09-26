@@ -151,6 +151,9 @@ export interface ProductItem {
   sku: string;
   category_id: number;
   category_name?: string;
+  warehouse_name?: string;
+  location_name?: string;
+  primary_location?: string;
   unit_of_measure: string;
   total_stock: number;
   is_low_stock: boolean;

@@ -79,12 +79,14 @@ def seed_database():
         cat_elec = Category(name="Electronics", description="Sensors, PCBs, and microcontroller modules")
         cat_fin = Category(name="Finished Goods", description="Ready-to-ship assembled products")
         cat_pkg = Category(name="Packaging Supplies", description="Cardboard boxes, foam, and shipping accessories")
-        db.add_all([cat_raw, cat_elec, cat_fin, cat_pkg])
+        cat_auto = Category(name="Automotive Parts", description="Mechanical spares, brake assemblies, and auto kits")
+        db.add_all([cat_raw, cat_elec, cat_fin, cat_pkg, cat_auto])
         db.commit()
         db.refresh(cat_raw)
         db.refresh(cat_elec)
         db.refresh(cat_fin)
         db.refresh(cat_pkg)
+        db.refresh(cat_auto)
         print("  [+] Categories created")
 
         # 4. Products

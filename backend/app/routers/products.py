@@ -28,12 +28,30 @@ def compute_product_response(product: Product, db: Session) -> ProductResponse:
     category_name = product.category.name if product.category else None
     is_low_stock = (total_stock <= product.reorder_level and product.reorder_level > 0) or (total_stock <= 0)
 
+    # Determine primary location
+    primary_quant = db.query(StockQuant).filter(
+        StockQuant.product_id == product.id
+    ).order_by(StockQuant.quantity.desc(), StockQuant.id.asc()).first()
+
+    warehouse_name = None
+    location_name = None
+    primary_location = None
+    if primary_quant and primary_quant.location:
+        loc = primary_quant.location
+        wh_name = loc.warehouse.name if loc.warehouse else None
+        warehouse_name = wh_name
+        location_name = loc.name
+        primary_location = f"{wh_name} - {loc.name}" if wh_name else loc.name
+
     return ProductResponse(
         id=product.id,
         name=product.name,
         sku=product.sku,
         category_id=product.category_id,
         category_name=category_name,
+        warehouse_name=warehouse_name,
+        location_name=location_name,
+        primary_location=primary_location,
         unit_of_measure=product.unit_of_measure,
         reorder_level=product.reorder_level,
         reorder_qty=product.reorder_qty,
@@ -105,39 +123,37 @@ def create_product(
     db.commit()
     db.refresh(product)
     
-    # Handle initial stock if specified
-    if req.initial_stock and req.initial_stock > 0:
-        target_location_id = req.initial_location_id
-        if not target_location_id:
-            # Fall back to first internal location available
-            default_loc = db.query(Location).filter(Location.type == "internal").first()
-            if default_loc:
-                target_location_id = default_loc.id
-                
-        if target_location_id:
-            loc = db.query(Location).filter(Location.id == target_location_id).first()
-            if loc:
-                quant = StockQuant(
-                    product_id=product.id,
-                    location_id=target_location_id,
-                    quantity=req.initial_stock,
-                    last_updated=datetime.now(timezone.utc)
-                )
-                db.add(quant)
-                
-                # Audit ledger entry
+    # Handle initial location & stock
+    target_location_id = req.initial_location_id
+    if not target_location_id:
+        default_loc = db.query(Location).filter(Location.type == "internal").first()
+        if default_loc:
+            target_location_id = default_loc.id
+
+    if target_location_id:
+        loc = db.query(Location).filter(Location.id == target_location_id).first()
+        if loc:
+            init_qty = float(req.initial_stock) if req.initial_stock and req.initial_stock > 0 else 0.0
+            quant = StockQuant(
+                product_id=product.id,
+                location_id=target_location_id,
+                quantity=init_qty,
+                last_updated=datetime.now(timezone.utc)
+            )
+            db.add(quant)
+            if init_qty > 0:
                 ledger = StockLedger(
                     product_id=product.id,
                     location_id=target_location_id,
                     operation_id=None,
                     move_type="adjustment",
-                    qty_change=req.initial_stock,
-                    qty_after=req.initial_stock,
+                    qty_change=init_qty,
+                    qty_after=init_qty,
                     timestamp=datetime.now(timezone.utc),
                     remarks="Initial stock balance upon creation"
                 )
                 db.add(ledger)
-                db.commit()
+            db.commit()
 
     base_resp = compute_product_response(product, db)
     stocks = get_product_stock_locations(product.id, db)

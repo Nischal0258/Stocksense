@@ -28,11 +28,13 @@ import {
   LocationItem,
   ProductItem,
   CategoryItem,
+  WarehouseItem,
 } from '../api/services';
 
 interface InventoryContextType {
   products: Product[];
   categories: CategoryItem[];
+  warehouses: WarehouseItem[];
   locations: LocationCapacity[];
   movements: StockMovement[];
   receipts: Receipt[];
@@ -104,6 +106,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [warehouses, setWarehouses] = useState<WarehouseItem[]>([]);
   const [locations, setLocations] = useState<LocationCapacity[]>([]);
   const [rawLocations, setRawLocations] = useState<LocationItem[]>([]);
   const [movements, setMovements] = useState<StockMovement[]>([]);
@@ -129,6 +132,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         adjustmentsRes,
         movesRes,
         catsRes,
+        whsRes,
       ] = await Promise.allSettled([
         productsApi.getProducts(),
         warehousesApi.getLocations(),
@@ -138,11 +142,15 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         adjustmentsApi.getAdjustments(),
         movesApi.getMoves(),
         categoriesApi.getCategories(),
+        warehousesApi.getWarehouses(),
       ]);
 
-      // 0. Process Categories
+      // 0. Process Categories & Warehouses
       if (catsRes.status === 'fulfilled') {
         setCategories(catsRes.value);
+      }
+      if (whsRes.status === 'fulfilled') {
+        setWarehouses(whsRes.value);
       }
 
       // 1. Process Locations
@@ -169,7 +177,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           name: p.name,
           sku: p.sku,
           category: p.category_name || 'General Inventory',
-          location: currentRawLocs[0] ? `${currentRawLocs[0].warehouse_name} - ${currentRawLocs[0].name}` : 'Main Warehouse',
+          location: p.primary_location || (currentRawLocs[0] ? `${currentRawLocs[0].warehouse_name} - ${currentRawLocs[0].name}` : 'Main Warehouse'),
           currentStock: p.total_stock,
           reorderLevel: p.reorder_level,
           unit: p.unit_of_measure,
@@ -572,6 +580,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       value={{
         products,
         categories,
+        warehouses,
         locations,
         movements,
         receipts,

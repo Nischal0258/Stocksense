@@ -57,6 +57,9 @@ class LocationStockItem(BaseModel):
 class ProductResponse(ProductBase):
     id: int
     category_name: Optional[str] = None
+    warehouse_name: Optional[str] = None
+    location_name: Optional[str] = None
+    primary_location: Optional[str] = None
     total_stock: float = 0.0
     is_low_stock: bool = False
     created_at: Optional[datetime] = None
