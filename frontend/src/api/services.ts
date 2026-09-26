@@ -271,11 +271,38 @@ export const warehousesApi = {
       body: JSON.stringify(payload),
     }),
 
+  updateWarehouse: (id: number, payload: { name?: string; code?: string; address?: string; is_active?: boolean }) =>
+    apiRequest<WarehouseItem>(`/api/warehouses/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+
+  deleteWarehouse: (id: number) =>
+    apiRequest<{ message: string }>(`/api/warehouses/${id}`, {
+      method: 'DELETE',
+    }),
+
   createLocation: (payload: { warehouse_id: number; name: string; code: string; type: string }) =>
     apiRequest<LocationItem>('/api/locations', {
       method: 'POST',
       body: JSON.stringify(payload),
     }),
+
+  deleteLocation: (id: number) =>
+    apiRequest<{ message: string }>(`/api/locations/${id}`, {
+      method: 'DELETE',
+    }),
+
+  getWarehouseStock: (warehouseId: number) =>
+    apiRequest<Array<{
+      product_id: number;
+      product_name: string;
+      product_sku: string;
+      location_id: number;
+      location_name: string;
+      location_code: string;
+      quantity: number;
+    }>>(`/api/warehouses/${warehouseId}/stock`),
 };
 
 // ==========================================
@@ -559,6 +586,25 @@ export const reorderApi = {
 
   updateReorderRule: (productId: number, payload: { reorder_level: number; reorder_qty: number }) =>
     apiRequest<ProductItem>(`/api/products/${productId}/reorder`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    }),
+};
+
+// ==========================================
+// 11. Profile Services
+// ==========================================
+export interface ProfileUpdatePayload {
+  name?: string;
+  email?: string;
+  current_password?: string;
+  new_password?: string;
+}
+
+export const profileApi = {
+  getProfile: () => apiRequest<UserProfile>('/api/profile'),
+  updateProfile: (payload: ProfileUpdatePayload) =>
+    apiRequest<UserProfile>('/api/profile', {
       method: 'PUT',
       body: JSON.stringify(payload),
     }),

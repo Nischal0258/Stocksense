@@ -456,6 +456,25 @@ StockSense/
   - Production build (`npm run build`): success.
   - Backend pytest suite (`python -m pytest tests/test_stock.py`): 9/9 passed.
 
+### F8 — Navigation Restructuring, Products Sub-Views, Warehouse Settings, and Left Sidebar Profile Menu — 2026-09-26 17:10
+- **Products Sub-Views Navigation**:
+  - Enhanced `ProductsTableSection.tsx` with top tab switcher: `Product Catalog`, `Stock Availability per Location`, `Product Categories`, and `Reordering Rules`.
+  - Built `StockByLocationSection.tsx`: Physical stock availability per warehouse and storage rack bin with warehouse filter and SKU search.
+  - Built `CategoriesSection.tsx`: Category cards with product counts, product list inspection per category, and manager-only category creation (`POST /api/categories`) and deletion.
+  - Built `ReorderRulesSection.tsx`: Threshold matrix showing safe stock levels, deficits, 1-click replenishment draft PO generator, and manager rule editor (`reorderApi.updateReorderRule`).
+- **Settings Section (Warehouse & Locations)**:
+  - Added `settings` route in `App.tsx` and `types/inventory.ts`.
+  - Built `WarehouseSettingsSection.tsx`: Manage facilities (`POST/DELETE /api/warehouses`) and internal storage bin locations (`POST /api/locations`). Gated to Inventory Manager with staff view-only banner.
+- **Left Sidebar Profile Menu**:
+  - Restructured `Sidebar.tsx` navigation groups: Overview (Dashboard), Products, Operations (Receipts, Deliveries, Adjustments, Transfers, Move History), and Settings (Warehouse).
+  - Built Left Sidebar Profile Menu: User card with avatar, name, and role pill (`Manager` or `Staff`).
+  - Added "My Profile" button opening `UserProfileModal.tsx` to view account details, change display name, update email, and update password via `/api/profile`.
+  - Added direct "Logout" action in the sidebar.
+- **Verification**:
+  - `npm run lint`: 0 TypeScript errors.
+  - `npm run build`: Vite production build passed (4.38s).
+  - `pytest tests/test_stock.py`: 9/9 tests passed (100% green).
+
 ---
 
 ## Integration Notes

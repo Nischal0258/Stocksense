@@ -11,6 +11,7 @@ import { DeliveriesSection } from './components/operations/DeliveriesSection';
 import { TransfersSection } from './components/operations/TransfersSection';
 import { AdjustmentsSection } from './components/operations/AdjustmentsSection';
 import { MoveHistorySection } from './components/history/MoveHistorySection';
+import { WarehouseSettingsSection } from './components/settings/WarehouseSettingsSection';
 import { RefreshCw } from 'lucide-react';
 
 function RouteContent() {
@@ -31,6 +32,8 @@ function RouteContent() {
       return <AdjustmentsSection />;
     case 'move-history':
       return <MoveHistorySection />;
+    case 'settings':
+      return <WarehouseSettingsSection />;
     default:
       return <DashboardBentoGrid />;
   }

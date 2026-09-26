@@ -65,6 +65,10 @@ export const Topbar: React.FC<TopbarProps> = ({ onToggleMobileMenu, isSidebarCol
       title: 'Movement Ledger',
       subtitle: 'Immutable audit trail of all receipts, deliveries, and adjustments',
     },
+    settings: {
+      title: 'Warehouse & Facility Settings',
+      subtitle: 'Configure regional fulfillment centers, storage zones, and bin codes',
+    },
   };
 
   const { title, subtitle } = routeMeta[activeRoute] || routeMeta.dashboard;

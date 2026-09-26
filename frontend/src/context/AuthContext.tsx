@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authApi, UserProfile, LoginPayload, SignupPayload } from '../api/services';
+import { authApi, profileApi, UserProfile, LoginPayload, SignupPayload, ProfileUpdatePayload } from '../api/services';
 import { getToken, setToken, removeToken } from '../api/client';
 
 export type UserRole = 'inventory_manager' | 'warehouse_staff';
@@ -22,6 +22,7 @@ interface AuthContextType {
   switchRole: (targetRole?: UserRole) => Promise<void>;
   loginAsManager: () => Promise<void>;
   loginAsStaff: () => Promise<void>;
+  updateUserProfile: (payload: ProfileUpdatePayload) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -119,6 +120,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await login({ email: 'staff@stocksense.com', password: 'Password123' });
   };
 
+  const updateUserProfile = async (payload: ProfileUpdatePayload) => {
+    const updated = await profileApi.updateProfile(payload);
+    setUser((prev) =>
+      prev
+        ? {
+            ...prev,
+            name: updated.name,
+            email: updated.email,
+          }
+        : null
+    );
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -132,6 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         switchRole,
         loginAsManager,
         loginAsStaff,
+        updateUserProfile,
       }}
     >
       {children}

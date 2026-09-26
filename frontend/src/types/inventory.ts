@@ -106,7 +106,8 @@ export type NavRoute =
   | 'deliveries'
   | 'transfers'
   | 'adjustments'
-  | 'move-history';
+  | 'move-history'
+  | 'settings';
 
 export interface ToastMessage {
   id: string;

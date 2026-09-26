@@ -12,6 +12,8 @@ import {
   AlertTriangle,
   Lock,
   ShieldAlert,
+  Tag,
+  Sliders,
 } from 'lucide-react';
 import { useInventory } from '../../context/InventoryContext';
 import { useAuth } from '../../context/AuthContext';
@@ -19,12 +21,18 @@ import { StatusBadge } from '../ui/StatusBadge';
 import { Modal } from '../ui/Modal';
 import { AddProductForm } from './AddProductForm';
 import { Product } from '../../types/inventory';
+import { StockByLocationSection } from './StockByLocationSection';
+import { CategoriesSection } from './CategoriesSection';
+import { ReorderRulesSection } from './ReorderRulesSection';
+
+type ProductSubTab = 'catalog' | 'locations' | 'categories' | 'reorder-rules';
 
 export const ProductsTableSection: React.FC = () => {
   const { products, deleteProduct, updateProduct, setActiveModal } = useInventory();
   const { user } = useAuth();
   const isManager = user?.role === 'inventory_manager';
 
+  const [activeTab, setActiveTab] = useState<ProductSubTab>('catalog');
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -62,16 +70,79 @@ export const ProductsTableSection: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-16">
-      {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-[#242633]">
-            Product Catalog
-          </h2>
-          <p className="text-xs sm:text-sm text-[#686878]">
-            {products.length} registered SKUs with real-time stock levels and replenishment triggers
-          </p>
-        </div>
+      {/* Sub-Tab Navigation Bar */}
+      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-white/70 backdrop-blur-md rounded-2xl border border-[#EEE8E3] shadow-xs">
+        <button
+          onClick={() => setActiveTab('catalog')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'catalog'
+              ? 'bg-gradient-to-r from-[#DBBA95] via-[#FABED7] to-[#F07BAF] text-[#242633] shadow-xs'
+              : 'text-[#686878] hover:text-[#242633] hover:bg-white/60'
+          }`}
+        >
+          <Boxes className="w-3.5 h-3.5" />
+          <span>Product Catalog</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('locations')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'locations'
+              ? 'bg-gradient-to-r from-[#DBBA95] via-[#FABED7] to-[#F07BAF] text-[#242633] shadow-xs'
+              : 'text-[#686878] hover:text-[#242633] hover:bg-white/60'
+          }`}
+        >
+          <MapPin className="w-3.5 h-3.5" />
+          <span>Stock Availability per Location</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('categories')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'categories'
+              ? 'bg-gradient-to-r from-[#DBBA95] via-[#FABED7] to-[#F07BAF] text-[#242633] shadow-xs'
+              : 'text-[#686878] hover:text-[#242633] hover:bg-white/60'
+          }`}
+        >
+          <Tag className="w-3.5 h-3.5" />
+          <span>Product Categories</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('reorder-rules')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'reorder-rules'
+              ? 'bg-gradient-to-r from-[#DBBA95] via-[#FABED7] to-[#F07BAF] text-[#242633] shadow-xs'
+              : 'text-[#686878] hover:text-[#242633] hover:bg-white/60'
+          }`}
+        >
+          <Sliders className="w-3.5 h-3.5" />
+          <span>Reordering Rules</span>
+        </button>
+      </div>
+
+      {/* Tab 2: Stock Availability per Location */}
+      {activeTab === 'locations' && <StockByLocationSection />}
+
+      {/* Tab 3: Product Categories */}
+      {activeTab === 'categories' && <CategoriesSection />}
+
+      {/* Tab 4: Reordering Rules */}
+      {activeTab === 'reorder-rules' && <ReorderRulesSection />}
+
+      {/* Tab 1: Product Catalog (Default) */}
+      {activeTab === 'catalog' && (
+        <div className="space-y-6">
+          {/* Header Bar */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight text-[#242633]">
+                Product Catalog
+              </h2>
+              <p className="text-xs sm:text-sm text-[#686878]">
+                {products.length} registered SKUs with real-time stock levels and replenishment triggers
+              </p>
+            </div>
 
         {isManager ? (
           <button
@@ -448,6 +519,8 @@ export const ProductsTableSection: React.FC = () => {
             </div>
           </form>
         </Modal>
+      )}
+        </div>
       )}
     </div>
   );
