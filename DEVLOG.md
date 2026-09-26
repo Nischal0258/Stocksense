@@ -431,6 +431,17 @@ StockSense/
 - Ran frontend production build (`npm run build`): bundle compiled cleanly.
 - Full inventory lifecycle verified end-to-end.
 
+### F6 & B10 — RBAC Security Enforcement & UI Polish — 2026-09-26 16:15
+- **Role-Based Access Control (RBAC)**:
+  - Backend: Added `require_manager` dependency on `POST/PUT/DELETE /api/products`, `POST/PUT/DELETE /api/categories`, `POST/PUT/DELETE /api/warehouses`, `POST/PUT/DELETE /api/locations`, and `PUT /api/products/:id/reorder`. Warehouse staff receives `HTTP 403 Forbidden` if attempting any catalog or system mutation.
+  - Backend Tests: Added `test_rbac_manager_vs_staff` covering 403 rejections on product creation, deletion, reorder rule updates, warehouse creation, while confirming operational execution (receipts/deliveries). 9/9 tests passing (100% green).
+  - Frontend: Product catalog UI now enforces strict role gating. Warehouse Staff sees a "Warehouse Staff Mode (Catalog Restricted)" alert banner, a locked "+ Add Product (Manager Only)" button, and hidden/locked Edit & Delete action buttons. Quick stock adjustments remain accessible for cycle counting.
+- **Pink Gradient Brightening**:
+  - Replaced muted lavender tones (`#D0BCE1`) with a brighter, more vibrant rose/pink gradient (`#F8C6D8` to `#EAA2C8`) across `index.css` (`.nav-active-pill`, `.hero-gradient`), `AppLogo.tsx`, `Topbar.tsx`, `AuthPage.tsx`, and primary action buttons.
+- **Inventory Health Wheel ("Wagon Wheel") Semantic & Functional Upgrade**:
+  - Clarified metric semantics: Explains catalog SKU availability rate (Healthy vs Low Stock vs Depleted) against configured reorder thresholds.
+  - Enhanced `InventoryHealthCard.tsx` with interactive status filter navigation, explicit safe SKU fraction (`X of Y items`), and real-time replenishment alert prompts with quick-action links to restock depleted items.
+
 ---
 
 ## Integration Notes

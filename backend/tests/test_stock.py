@@ -203,3 +203,54 @@ def test_move_history_and_dashboard_kpis():
     assert "low_stock_count" in kpis
     assert "pending_receipts" in kpis
     assert "pending_deliveries" in kpis
+
+def test_rbac_manager_vs_staff():
+    # 1. Login as staff
+    staff_login = client.post("/api/auth/login", json={
+        "email": "staff@stocksense.com",
+        "password": "Password123"
+    })
+    assert staff_login.status_code == 200
+    staff_token = staff_login.json()["token"]
+    staff_headers = {"Authorization": f"Bearer {staff_token}"}
+
+    # 2. Staff cannot create a product (403 Forbidden)
+    create_resp = client.post("/api/products", json={
+        "name": "Staff Unauthorized Item",
+        "sku": "UNAUTH-999",
+        "unit_of_measure": "units"
+    }, headers=staff_headers)
+    assert create_resp.status_code == 403
+    assert "Inventory Manager access required" in create_resp.json()["detail"]
+
+    # 3. Staff cannot delete a product (403 Forbidden)
+    prod = client.get("/api/products?search=STL-ROD-10").json()[0]
+    del_resp = client.delete(f"/api/products/{prod['id']}", headers=staff_headers)
+    assert del_resp.status_code == 403
+    assert "Inventory Manager access required" in del_resp.json()["detail"]
+
+    # 4. Staff cannot update reorder rules (403 Forbidden)
+    reorder_resp = client.put(f"/api/products/{prod['id']}/reorder", json={
+        "reorder_level": 50,
+        "reorder_qty": 100
+    }, headers=staff_headers)
+    assert reorder_resp.status_code == 403
+
+    # 5. Staff cannot create a warehouse (403 Forbidden)
+    wh_resp = client.post("/api/warehouses", json={
+        "name": "Unauthorized WH",
+        "code": "UWH",
+        "address": "Nowhere"
+    }, headers=staff_headers)
+    assert wh_resp.status_code == 403
+
+    # 6. Staff CAN create and process operations (e.g. Receipt)
+    locs = client.get("/api/locations").json()
+    dest_loc = locs[0]
+    receipt_resp = client.post("/api/receipts", json={
+        "supplier_name": "Standard Logistics",
+        "dest_location_id": dest_loc["id"],
+        "lines": [{"product_id": prod["id"], "demand_qty": 2.0}]
+    }, headers=staff_headers)
+    assert receipt_resp.status_code == 201
+

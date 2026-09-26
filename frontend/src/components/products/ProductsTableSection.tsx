@@ -10,8 +10,11 @@ import {
   Boxes,
   MapPin,
   AlertTriangle,
+  Lock,
+  ShieldAlert,
 } from 'lucide-react';
 import { useInventory } from '../../context/InventoryContext';
+import { useAuth } from '../../context/AuthContext';
 import { StatusBadge } from '../ui/StatusBadge';
 import { Modal } from '../ui/Modal';
 import { AddProductForm } from './AddProductForm';
@@ -19,6 +22,8 @@ import { Product } from '../../types/inventory';
 
 export const ProductsTableSection: React.FC = () => {
   const { products, deleteProduct, updateProduct, setActiveModal } = useInventory();
+  const { user } = useAuth();
+  const isManager = user?.role === 'inventory_manager';
 
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('ALL');
@@ -68,14 +73,45 @@ export const ProductsTableSection: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#DBBA95] via-[#F1D7C8] to-[#D0BCE1] text-[#242633] font-bold text-sm shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-95 shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Product</span>
-        </button>
+        {isManager ? (
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#DBBA95] via-[#F8C6D8] to-[#EAA2C8] text-[#242633] font-bold text-sm shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-95 shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Product</span>
+          </button>
+        ) : (
+          <button
+            disabled
+            title="Only Inventory Managers can register new catalog items"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/70 border border-[#EEE8E3] text-[#686878] font-semibold text-xs cursor-not-allowed opacity-80 shrink-0"
+          >
+            <Lock className="w-3.5 h-3.5 text-amber-600" />
+            <span>Add Product (Manager Only)</span>
+          </button>
+        )}
       </div>
+
+      {/* Staff View Banner */}
+      {!isManager && (
+        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-[#242633]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-700 shrink-0">
+              <ShieldAlert className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-[#242633]">Warehouse Staff View (Catalog Restricted)</p>
+              <p className="text-[11px] text-[#686878]">
+                Staff can view stock balances, check bin locations, and record physical counts. Adding, editing, or deleting catalog items requires Inventory Manager authorization.
+              </p>
+            </div>
+          </div>
+          <span className="hidden sm:inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-800">
+            Read-Only Catalog
+          </span>
+        </div>
+      )}
 
       {/* Filter & Search Bar */}
       <div className="glass-panel rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
@@ -222,36 +258,47 @@ export const ProductsTableSection: React.FC = () => {
                       {/* Actions */}
                       <td className="py-4 px-6 text-right">
                         <div className="flex items-center justify-end gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-                          {/* Quick Adjust Button */}
+                          {/* Quick Adjust Button (Allowed for both manager & staff) */}
                           <button
                             onClick={() => setActiveModal('adjustment')}
-                            title="Quick Adjust Stock"
+                            title="Quick Adjust Stock (Physical Count)"
                             className="p-2 rounded-xl text-[#686878] hover:text-[#242633] hover:bg-white transition-colors"
                           >
                             <SlidersHorizontal className="w-4 h-4" />
                           </button>
 
-                          {/* Edit Details */}
-                          <button
-                            onClick={() => setEditingProduct(p)}
-                            title="Edit Product"
-                            className="p-2 rounded-xl text-[#686878] hover:text-[#242633] hover:bg-white transition-colors"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
+                          {/* Edit Details - Manager Only */}
+                          {isManager ? (
+                            <>
+                              <button
+                                onClick={() => setEditingProduct(p)}
+                                title="Edit Product"
+                                className="p-2 rounded-xl text-[#686878] hover:text-[#242633] hover:bg-white transition-colors"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </button>
 
-                          {/* Delete */}
-                          <button
-                            onClick={() => {
-                              if (confirm(`Are you sure you want to delete ${p.name}?`)) {
-                                deleteProduct(p.id);
-                              }
-                            }}
-                            title="Delete Product"
-                            className="p-2 rounded-xl text-[#686878] hover:text-[#E87883] hover:bg-white transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                              {/* Delete - Manager Only */}
+                              <button
+                                onClick={() => {
+                                  if (confirm(`Are you sure you want to delete ${p.name}?`)) {
+                                    deleteProduct(p.id);
+                                  }
+                                }}
+                                title="Delete Product"
+                                className="p-2 rounded-xl text-[#686878] hover:text-[#E87883] hover:bg-white transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <span
+                              title="Catalog edits and deletions are restricted to Inventory Managers"
+                              className="p-2 text-[#686878]/50 cursor-not-allowed inline-flex items-center"
+                            >
+                              <Lock className="w-3.5 h-3.5" />
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>

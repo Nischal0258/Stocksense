@@ -15,7 +15,7 @@ from app.schemas.warehouse import (
     LocationResponse
 )
 from app.schemas.auth import MessageResponse
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_manager
 
 router = APIRouter(tags=["Warehouses & Locations"])
 
@@ -59,7 +59,7 @@ def get_warehouses(
 def create_warehouse(
     req: WarehouseCreate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     clean_code = req.code.strip().upper()
     existing = db.query(Warehouse).filter(Warehouse.code.ilike(clean_code)).first()
@@ -138,7 +138,7 @@ def update_warehouse(
     warehouse_id: int,
     req: WarehouseUpdate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     wh = db.query(Warehouse).filter(Warehouse.id == warehouse_id).first()
     if not wh:
@@ -185,7 +185,7 @@ def update_warehouse(
 def delete_warehouse(
     warehouse_id: int,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     wh = db.query(Warehouse).filter(Warehouse.id == warehouse_id).first()
     if not wh:
@@ -250,7 +250,7 @@ def get_warehouse_locations(warehouse_id: int, db: Session = Depends(get_db)):
 def create_location(
     req: LocationCreate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     wh = db.query(Warehouse).filter(Warehouse.id == req.warehouse_id).first()
     if not wh:
@@ -294,7 +294,7 @@ def update_location(
     location_id: int,
     req: LocationUpdate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     loc = db.query(Location).filter(Location.id == location_id).first()
     if not loc:
@@ -323,7 +323,7 @@ def update_location(
 def delete_location(
     location_id: int,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     loc = db.query(Location).filter(Location.id == location_id).first()
     if not loc:

@@ -16,7 +16,7 @@ from app.schemas.product import (
     LocationStockItem
 )
 from app.schemas.auth import MessageResponse
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_manager
 
 router = APIRouter(prefix="/api/products", tags=["Products"])
 
@@ -78,7 +78,7 @@ def get_products(
 def create_product(
     req: ProductCreate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     # Check SKU uniqueness
     existing_sku = db.query(Product).filter(Product.sku.ilike(req.sku.strip())).first()
@@ -175,7 +175,7 @@ def update_product(
     product_id: int,
     req: ProductUpdate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
@@ -207,7 +207,7 @@ def update_product(
 def delete_product(
     product_id: int,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:

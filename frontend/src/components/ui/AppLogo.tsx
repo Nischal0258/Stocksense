@@ -9,7 +9,7 @@ export const AppLogo: React.FC<AppLogoProps> = ({ collapsed = false, className =
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
       {/* Dynamic Geometric StockSense Mark */}
-      <div className="relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-md bg-gradient-to-br from-[#DBBA95] via-[#F1D7C8] to-[#D0BCE1] p-0.5 shrink-0 transition-transform duration-300 hover:scale-105">
+      <div className="relative w-10 h-10 rounded-2xl flex items-center justify-center shadow-md bg-gradient-to-br from-[#DBBA95] via-[#F8C6D8] to-[#EAA2C8] p-0.5 shrink-0 transition-transform duration-300 hover:scale-105">
         <div className="w-full h-full bg-[#242633] rounded-[14px] flex items-center justify-center overflow-hidden">
           <svg
             className="w-5 h-5 text-[#F7F3F0]"

@@ -18,8 +18,8 @@ export const InventoryPulseHero: React.FC = () => {
   return (
     <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 lg:p-10 hero-gradient border border-white/80 shadow-[0_15px_35px_-15px_rgba(219,186,149,0.25)] transition-all">
       {/* Decorative Blur Spheres */}
-      <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-[#D0BCE1]/30 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-12 -left-12 w-64 h-64 rounded-full bg-[#F1D7C8]/40 blur-3xl pointer-events-none" />
+      <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-[#EAA2C8]/35 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-12 -left-12 w-64 h-64 rounded-full bg-[#F8C6D8]/45 blur-3xl pointer-events-none" />
 
       {/* Top Bar with LIVE Badge */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -109,7 +109,7 @@ export const InventoryPulseHero: React.FC = () => {
           <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 shadow-xs">
             <div className="flex items-center justify-between text-[#686878] mb-1">
               <span className="text-xs font-medium">Locations Active</span>
-              <MapPin className="w-4 h-4 text-[#D0BCE1]" />
+              <MapPin className="w-4 h-4 text-[#EAA2C8]" />
             </div>
             <p className="text-2xl font-bold text-[#242633]">{totalLocations} Zones</p>
             <p className="text-[11px] text-[#686878] mt-0.5">Warehouses & Racks</p>

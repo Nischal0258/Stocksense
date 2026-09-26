@@ -8,7 +8,7 @@ from app.database import get_db
 from app.models.stock import StockLedger, StockQuant
 from app.models.product import Product
 from app.schemas.stock import StockLedgerResponse, ReorderRuleResponse, ReorderRuleUpdate
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_manager
 
 router = APIRouter(tags=["Move History & Reorder Rules"])
 
@@ -100,7 +100,7 @@ def update_product_reorder_rule(
     product_id: int,
     req: ReorderRuleUpdate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     prod = db.query(Product).filter(Product.id == product_id).first()
     if not prod:

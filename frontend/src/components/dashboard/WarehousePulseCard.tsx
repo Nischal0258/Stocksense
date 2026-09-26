@@ -17,7 +17,7 @@ export const WarehousePulseCard: React.FC = () => {
           </h3>
           <p className="text-xs text-[#686878]">Capacity utilization & zone loads</p>
         </div>
-        <div className="p-2 rounded-2xl bg-[#D0BCE1]/25 text-[#5e4479]">
+        <div className="p-2 rounded-2xl bg-[#EAA2C8]/20 text-[#9c356f]">
           <Warehouse className="w-4 h-4" />
         </div>
       </div>
@@ -25,14 +25,14 @@ export const WarehousePulseCard: React.FC = () => {
       {/* Capacity Rows */}
       <div className="py-3 space-y-4 flex-1 flex flex-col justify-center">
         {primaryLocations.map((loc, idx) => {
-          // Alternating beige & lavender accents
+          // Alternating beige & rose accents
           const isBeige = idx % 2 === 0;
           const barColor = isBeige
-            ? 'from-[#DBBA95] to-[#F1D7C8]'
-            : 'from-[#D0BCE1] to-[#E7DDF1]';
+            ? 'from-[#DBBA95] to-[#F8C6D8]'
+            : 'from-[#EAA2C8] to-[#F8C6D8]';
           const badgeStyle = isBeige
             ? 'bg-[#DBBA95]/20 text-[#855e30]'
-            : 'bg-[#D0BCE1]/25 text-[#5e4479]';
+            : 'bg-[#EAA2C8]/20 text-[#9c356f]';
 
           return (
             <div key={loc.id} className="space-y-1.5">

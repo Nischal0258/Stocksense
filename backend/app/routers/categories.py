@@ -7,7 +7,7 @@ from app.database import get_db
 from app.models.product import Category, Product
 from app.schemas.product import CategoryCreate, CategoryUpdate, CategoryResponse
 from app.schemas.auth import MessageResponse
-from app.utils.dependencies import get_current_user
+from app.utils.dependencies import get_current_user, require_manager
 
 router = APIRouter(prefix="/api/categories", tags=["Categories"])
 
@@ -29,7 +29,7 @@ def get_categories(db: Session = Depends(get_db)):
 def create_category(
     req: CategoryCreate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     existing = db.query(Category).filter(Category.name.ilike(req.name.strip())).first()
     if existing:
@@ -54,7 +54,7 @@ def update_category(
     category_id: int,
     req: CategoryUpdate,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     cat = db.query(Category).filter(Category.id == category_id).first()
     if not cat:
@@ -79,7 +79,7 @@ def update_category(
 def delete_category(
     category_id: int,
     db: Session = Depends(get_db),
-    user=Depends(get_current_user)
+    user=Depends(require_manager)
 ):
     cat = db.query(Category).filter(Category.id == category_id).first()
     if not cat:
