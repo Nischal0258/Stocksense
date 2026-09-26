@@ -9,8 +9,15 @@ import {
   X,
   User,
   ArrowRight,
+  LogOut,
+  ShieldCheck,
+  PackageCheck,
+  ChevronDown,
+  RefreshCw,
 } from 'lucide-react';
 import { useInventory } from '../context/InventoryContext';
+import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { NavRoute } from '../types/inventory';
 
 interface TopbarProps {
@@ -20,7 +27,11 @@ interface TopbarProps {
 
 export const Topbar: React.FC<TopbarProps> = ({ onToggleMobileMenu, isSidebarCollapsed }) => {
   const { activeRoute, setActiveRoute, products, receipts } = useInventory();
+  const { user, logout, switchRole } = useAuth();
+  const { showToast } = useToast();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isSwitchingRole, setIsSwitchingRole] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
 
@@ -290,17 +301,130 @@ export const Topbar: React.FC<TopbarProps> = ({ onToggleMobileMenu, isSidebarCol
             )}
           </div>
 
-          {/* User Profile Avatar */}
-          <div className="flex items-center gap-2 pl-1 sm:pl-2 border-l border-[#EEE8E3]">
-            <div className="relative w-9 h-9 rounded-full bg-gradient-to-tr from-[#DBBA95] to-[#D0BCE1] p-0.5 shadow-sm flex items-center justify-center">
-              <div className="w-full h-full rounded-full bg-white flex items-center justify-center font-bold text-xs text-[#242633]">
-                AM
+          {/* User Profile & Role Switcher Dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowProfileMenu(!showProfileMenu)}
+              className="flex items-center gap-2 pl-2 border-l border-[#EEE8E3] hover:opacity-85 transition-opacity"
+            >
+              <div className="relative w-9 h-9 rounded-full bg-gradient-to-tr from-[#DBBA95] to-[#D0BCE1] p-0.5 shadow-sm flex items-center justify-center shrink-0">
+                <div className="w-full h-full rounded-full bg-white flex items-center justify-center font-bold text-xs text-[#242633]">
+                  {user?.name
+                    ? user.name
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2)
+                    : 'AM'}
+                </div>
               </div>
-            </div>
-            <div className="hidden xl:block text-left">
-              <p className="text-xs font-bold text-[#242633] leading-none">Alex Morgan</p>
-              <p className="text-[10px] text-[#686878] leading-tight mt-0.5">Inventory Lead</p>
-            </div>
+              <div className="hidden xl:block text-left">
+                <div className="flex items-center gap-1.5">
+                  <p className="text-xs font-bold text-[#242633] leading-none">
+                    {user?.name || 'Inventory Admin'}
+                  </p>
+                  <ChevronDown className="w-3 h-3 text-[#686878]" />
+                </div>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <span
+                    className={`inline-block w-1.5 h-1.5 rounded-full ${
+                      user?.role === 'inventory_manager' ? 'bg-[#855e30]' : 'bg-[#604975]'
+                    }`}
+                  />
+                  <p className="text-[10px] font-semibold text-[#686878] leading-tight capitalize">
+                    {user?.role === 'inventory_manager' ? 'Inventory Manager' : 'Warehouse Staff'}
+                  </p>
+                </div>
+              </div>
+            </button>
+
+            {/* Profile & Role Switcher Menu */}
+            {showProfileMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setShowProfileMenu(false)}
+                />
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl border border-[#EEE8E3] shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="px-2 py-2 border-b border-[#EEE8E3] mb-2">
+                    <p className="text-xs font-bold text-[#242633]">{user?.name || 'Inventory User'}</p>
+                    <p className="text-[11px] text-[#686878] truncate">{user?.email || 'admin@stocksense.com'}</p>
+                    <div className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#F7F3F0] text-[#242633] border border-[#EEE8E3]">
+                      {user?.role === 'inventory_manager' ? (
+                        <>
+                          <ShieldCheck className="w-3 h-3 text-[#855e30]" />
+                          <span>Manager (Full Access)</span>
+                        </>
+                      ) : (
+                        <>
+                          <PackageCheck className="w-3 h-3 text-[#604975]" />
+                          <span>Warehouse Staff</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Switch Role Action */}
+                  <div className="space-y-1">
+                    <button
+                      type="button"
+                      disabled={isSwitchingRole}
+                      onClick={async () => {
+                        setIsSwitchingRole(true);
+                        try {
+                          await switchRole();
+                          showToast(
+                            'Role Switched',
+                            `Switched role to ${
+                              user?.role === 'inventory_manager'
+                                ? 'Warehouse Staff'
+                                : 'Inventory Manager'
+                            }`,
+                            'success'
+                          );
+                          setShowProfileMenu(false);
+                        } catch (err: any) {
+                          showToast('Error', err.message || 'Failed to switch role.', 'error');
+                        } finally {
+                          setIsSwitchingRole(false);
+                        }
+                      }}
+                      className="w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold text-[#855e30] hover:bg-[#DBBA95]/15 flex items-center justify-between transition-colors disabled:opacity-50"
+                    >
+                      <div className="flex items-center gap-2">
+                        {user?.role === 'inventory_manager' ? (
+                          <PackageCheck className="w-4 h-4 text-[#604975]" />
+                        ) : (
+                          <ShieldCheck className="w-4 h-4 text-[#855e30]" />
+                        )}
+                        <span>
+                          {user?.role === 'inventory_manager'
+                            ? 'Switch to Staff Mode'
+                            : 'Switch to Manager Mode'}
+                        </span>
+                      </div>
+                      {isSwitchingRole && <RefreshCw className="w-3.5 h-3.5 animate-spin" />}
+                    </button>
+
+                    {/* Sign Out Action */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        logout();
+                        setShowProfileMenu(false);
+                        showToast('Signed Out', 'Signed out of StockSense.', 'info');
+                      }}
+                      className="w-full text-left px-2.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 flex items-center gap-2 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

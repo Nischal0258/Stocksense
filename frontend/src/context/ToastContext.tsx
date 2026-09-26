@@ -4,7 +4,7 @@ import { CheckCircle2, AlertTriangle, AlertCircle, Info, X } from 'lucide-react'
 
 interface ToastContextType {
   toasts: ToastMessage[];
-  showToast: (title: string, description: string, type?: ToastMessage['type']) => void;
+  showToast: (title: string, description?: string, type?: ToastMessage['type']) => void;
   removeToast: (id: string) => void;
 }
 
@@ -17,7 +17,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const showToast = useCallback((title: string, description: string, type: ToastMessage['type'] = 'info') => {
+  const showToast = useCallback((title: string, description: string = '', type: ToastMessage['type'] = 'info') => {
     const id = Math.random().toString(36).substring(2, 9);
     const newToast: ToastMessage = { id, title, description, type };
     setToasts((prev) => [...prev, newToast]);
