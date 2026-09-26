@@ -1,0 +1,6 @@
+{
+  "name": "StockSense — Inventory Intelligence",
+  "description": "StockSense is an intelligent inventory management platform featuring live stock pulse, warehouse capacity tracking, automated receipts & deliveries, inventory adjustments, and real-time movement history.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
