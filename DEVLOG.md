@@ -442,6 +442,20 @@ StockSense/
   - Clarified metric semantics: Explains catalog SKU availability rate (Healthy vs Low Stock vs Depleted) against configured reorder thresholds.
   - Enhanced `InventoryHealthCard.tsx` with interactive status filter navigation, explicit safe SKU fraction (`X of Y items`), and real-time replenishment alert prompts with quick-action links to restock depleted items.
 
+### F7 — UI Radiant Pink Gradient, Hero Text Contrast, Chart Coordinates, and Auth Glow — 2026-09-26 16:35
+- **Brighten Pink Gradient**:
+  - Replaced subtle tones with radiant peach-rose to vivid rose (`#DBBA95` -> `#FABED7` -> `#F07BAF`) across `index.css` (`.nav-active-pill`, `.hero-gradient`), `AppLogo.tsx`, `Topbar.tsx` avatar ring & badges, and all primary operational buttons (`ProductsTableSection`, `ReceiptsTableSection`, `DeliveriesSection`, `AdjustmentsSection`, `TransfersSection`, `InventoryHealthCard`).
+- **Darken Text Under "Total Units in Stock"**:
+  - In `InventoryPulseHero.tsx`, elevated subtitle text contrast from faint `#686878` to clear slate-charcoal `#434553` and metric label to `#383A48` (~7.2:1 contrast ratio, WCAG AAA compliant) without making it harsh black.
+- **Stock Movement Chart Coordinate Legibility**:
+  - In `StockMovementChart.tsx`, adjusted `XAxis` and `YAxis` tick styling to `#383A48` with `fontWeight: 600`, added proper tick spacing (`dy={8}` / `dx={-6}`), crisp grid lines (`rgba(215, 205, 195, 0.75)`), and unified outbound stroke to `#F07BAF` / `#FABED7` for clear visual distinction.
+- **Sign-up / Auth Page Ambient Glow**:
+  - In `AuthPage.tsx`, boosted radial blur glow to `w-[55vw] h-[55vw] bg-[#F07BAF]/38 blur-[105px]` and added a warm ambient secondary orb `w-[32vw] h-[32vw] bg-[#FABED7]/45 blur-[95px]`.
+- **Verification**:
+  - TypeScript lint check (`npm run lint`): 0 errors.
+  - Production build (`npm run build`): success.
+  - Backend pytest suite (`python -m pytest tests/test_stock.py`): 9/9 passed.
+
 ---
 
 ## Integration Notes

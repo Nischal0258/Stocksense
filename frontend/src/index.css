@@ -54,15 +54,15 @@
 }
 
 .nav-active-pill {
-  background: linear-gradient(135deg, #DBBA95 0%, #F8C6D8 50%, #EAA2C8 100%);
+  background: linear-gradient(135deg, #DBBA95 0%, #FABED7 45%, #F07BAF 100%);
   color: #242633;
-  box-shadow: 0 4px 15px -3px rgba(234, 162, 200, 0.4);
+  box-shadow: 0 4px 16px -3px rgba(240, 123, 175, 0.45);
 }
 
 .hero-gradient {
-  background: radial-gradient(circle at 10% 20%, rgba(219, 186, 149, 0.35) 0%, transparent 45%),
-              radial-gradient(circle at 90% 80%, rgba(234, 162, 200, 0.45) 0%, transparent 50%),
-              radial-gradient(circle at 50% 50%, rgba(248, 198, 216, 0.4) 0%, transparent 60%),
-              rgba(255, 255, 255, 0.7);
+  background: radial-gradient(circle at 10% 20%, rgba(219, 186, 149, 0.4) 0%, transparent 45%),
+              radial-gradient(circle at 88% 75%, rgba(240, 123, 175, 0.45) 0%, transparent 55%),
+              radial-gradient(circle at 50% 50%, rgba(250, 190, 215, 0.45) 0%, transparent 60%),
+              rgba(255, 255, 255, 0.75);
 }
 

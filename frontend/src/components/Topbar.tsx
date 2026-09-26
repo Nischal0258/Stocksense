@@ -264,9 +264,9 @@ export const Topbar: React.FC<TopbarProps> = ({ onToggleMobileMenu, isSidebarCol
                     {pendingReceipts.map((rec) => (
                       <div
                         key={rec.id}
-                        className="flex items-start gap-3 p-2.5 rounded-2xl bg-[#EAA2C8]/15 border border-[#EAA2C8]/30"
+                        className="flex items-start gap-3 p-2.5 rounded-2xl bg-[#F07BAF]/15 border border-[#F07BAF]/30"
                       >
-                        <CheckCircle2 className="w-4 h-4 text-[#9c356f] shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-[#b32b69] shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-bold text-[#242633]">
                             Pending Consignment {rec.reference}
@@ -308,7 +308,7 @@ export const Topbar: React.FC<TopbarProps> = ({ onToggleMobileMenu, isSidebarCol
               onClick={() => setShowProfileMenu(!showProfileMenu)}
               className="flex items-center gap-2 pl-2 border-l border-[#EEE8E3] hover:opacity-85 transition-opacity"
             >
-              <div className="relative w-9 h-9 rounded-full bg-gradient-to-tr from-[#DBBA95] to-[#EAA2C8] p-0.5 shadow-sm flex items-center justify-center shrink-0">
+              <div className="relative w-9 h-9 rounded-full bg-gradient-to-tr from-[#DBBA95] to-[#F07BAF] p-0.5 shadow-sm flex items-center justify-center shrink-0">
                 <div className="w-full h-full rounded-full bg-white flex items-center justify-center font-bold text-xs text-[#242633]">
                   {user?.name
                     ? user.name

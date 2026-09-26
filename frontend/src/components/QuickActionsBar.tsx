@@ -19,9 +19,9 @@ export const QuickActionsBar: React.FC = () => {
 
       <button
         onClick={() => setActiveModal('delivery')}
-        className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs font-semibold text-[#242633] bg-white/70 hover:bg-[#EAA2C8]/30 hover:text-[#242633] border border-white/90 shadow-xs transition-all active:scale-95"
+        className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs font-semibold text-[#242633] bg-white/70 hover:bg-[#F07BAF]/30 hover:text-[#242633] border border-white/90 shadow-xs transition-all active:scale-95"
       >
-        <span className="w-5 h-5 rounded-full bg-[#F8C6D8] flex items-center justify-center text-[#9c356f]">
+        <span className="w-5 h-5 rounded-full bg-[#FABED7] flex items-center justify-center text-[#b32b69]">
           <ArrowUpRight className="w-3.5 h-3.5" />
         </span>
         <span>Create Delivery</span>

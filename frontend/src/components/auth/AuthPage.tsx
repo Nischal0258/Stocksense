@@ -156,8 +156,9 @@ export const AuthPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F7F3F0] text-[#242633] flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
       {/* Decorative ambient background blurs */}
-      <div className="absolute top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#DBBA95]/25 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#EAA2C8]/25 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#DBBA95]/30 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-12%] right-[-10%] w-[55vw] h-[55vw] rounded-full bg-[#F07BAF]/38 blur-[105px] pointer-events-none" />
+      <div className="absolute top-[30%] right-[-8%] w-[32vw] h-[32vw] rounded-full bg-[#FABED7]/45 blur-[95px] pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
         {/* Header Branding */}
@@ -191,9 +192,9 @@ export const AuthPage: React.FC = () => {
               type="button"
               onClick={handleQuickStaff}
               disabled={isSubmitting}
-              className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#EAA2C8]/15 hover:bg-[#EAA2C8]/30 border border-[#EAA2C8]/40 text-[#9c356f] text-xs font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+              className="flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-[#F07BAF]/15 hover:bg-[#F07BAF]/30 border border-[#F07BAF]/40 text-[#b32b69] text-xs font-semibold transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
             >
-              <PackageCheck className="w-4 h-4 text-[#9c356f]" />
+              <PackageCheck className="w-4 h-4 text-[#b32b69]" />
               <span>Staff Mode</span>
             </button>
           </div>
@@ -379,7 +380,7 @@ export const AuthPage: React.FC = () => {
                     onClick={() => setSignUpRole('warehouse_staff')}
                     className={`py-2 px-3 rounded-xl border text-xs font-semibold text-center transition-all ${
                       signUpRole === 'warehouse_staff'
-                        ? 'border-[#EAA2C8] bg-[#EAA2C8]/20 text-[#9c356f]'
+                        ? 'border-[#F07BAF] bg-[#F07BAF]/20 text-[#b32b69]'
                         : 'border-[#EEE8E3] bg-[#F7F3F0]/50 text-[#686878]'
                     }`}
                   >

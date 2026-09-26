@@ -15,9 +15,9 @@ export const WarehousePulseCard: React.FC = () => {
           <h3 className="text-base font-bold text-[#242633] tracking-tight">
             Warehouse Pulse
           </h3>
-          <p className="text-xs text-[#686878]">Capacity utilization & zone loads</p>
+          <p className="text-xs font-medium text-[#434553]">Capacity utilization & zone loads</p>
         </div>
-        <div className="p-2 rounded-2xl bg-[#EAA2C8]/20 text-[#9c356f]">
+        <div className="p-2 rounded-2xl bg-[#F07BAF]/20 text-[#b32b69]">
           <Warehouse className="w-4 h-4" />
         </div>
       </div>
@@ -28,11 +28,11 @@ export const WarehousePulseCard: React.FC = () => {
           // Alternating beige & rose accents
           const isBeige = idx % 2 === 0;
           const barColor = isBeige
-            ? 'from-[#DBBA95] to-[#F8C6D8]'
-            : 'from-[#EAA2C8] to-[#F8C6D8]';
+            ? 'from-[#DBBA95] to-[#FABED7]'
+            : 'from-[#F07BAF] to-[#FABED7]';
           const badgeStyle = isBeige
             ? 'bg-[#DBBA95]/20 text-[#855e30]'
-            : 'bg-[#EAA2C8]/20 text-[#9c356f]';
+            : 'bg-[#F07BAF]/20 text-[#b32b69]';
 
           return (
             <div key={loc.id} className="space-y-1.5">

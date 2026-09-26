@@ -155,7 +155,7 @@ export const InventoryHealthCard: React.FC = () => {
           </div>
           <button
             onClick={() => setActiveModal('receipt')}
-            className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-[#DBBA95] via-[#F8C6D8] to-[#EAA2C8] text-[#242633] text-xs font-bold flex items-center gap-1 shadow-xs hover:opacity-90 transition-opacity shrink-0"
+            className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-[#DBBA95] via-[#FABED7] to-[#F07BAF] text-[#242633] text-xs font-bold flex items-center gap-1 shadow-xs hover:opacity-90 transition-opacity shrink-0"
           >
             <PackagePlus className="w-3.5 h-3.5" />
             <span>Restock</span>

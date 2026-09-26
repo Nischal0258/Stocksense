@@ -18,8 +18,8 @@ export const InventoryPulseHero: React.FC = () => {
   return (
     <div className="relative overflow-hidden rounded-3xl p-6 sm:p-8 lg:p-10 hero-gradient border border-white/80 shadow-[0_15px_35px_-15px_rgba(219,186,149,0.25)] transition-all">
       {/* Decorative Blur Spheres */}
-      <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-[#EAA2C8]/35 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-12 -left-12 w-64 h-64 rounded-full bg-[#F8C6D8]/45 blur-3xl pointer-events-none" />
+      <div className="absolute -top-12 -right-12 w-64 h-64 rounded-full bg-[#F07BAF]/45 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-12 -left-12 w-64 h-64 rounded-full bg-[#FABED7]/55 blur-3xl pointer-events-none" />
 
       {/* Top Bar with LIVE Badge */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -33,7 +33,7 @@ export const InventoryPulseHero: React.FC = () => {
               LIVE PULSE
             </span>
           </div>
-          <span className="text-xs text-[#686878] hidden sm:inline">
+          <span className="text-xs font-medium text-[#434553] hidden sm:inline">
             Continuous bin telemetry & ledger sync
           </span>
         </div>
@@ -51,17 +51,17 @@ export const InventoryPulseHero: React.FC = () => {
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#242633] font-['Plus_Jakarta_Sans']">
               {totalUnits.toLocaleString()}
             </h2>
-            <span className="text-base sm:text-lg font-semibold text-[#686878]">
+            <span className="text-base sm:text-lg font-bold text-[#383A48]">
               total units in stock
             </span>
           </div>
-          <p className="mt-2 text-sm text-[#686878] max-w-xl leading-relaxed">
+          <p className="mt-2 text-sm font-medium text-[#434553] max-w-xl leading-relaxed">
             Multi-tier inventory intelligence across active warehousing, production staging, and rack aisles. Real-time balance and automated replenishment triggers active.
           </p>
 
           {/* Quick Actions Pills */}
           <div className="mt-6 flex flex-wrap items-center gap-2 sm:gap-3">
-            <span className="text-xs font-bold text-[#686878] uppercase tracking-wider mr-1">
+            <span className="text-xs font-bold text-[#434553] uppercase tracking-wider mr-1">
               Quick Actions:
             </span>
             <button
@@ -109,7 +109,7 @@ export const InventoryPulseHero: React.FC = () => {
           <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-md border border-white/80 shadow-xs">
             <div className="flex items-center justify-between text-[#686878] mb-1">
               <span className="text-xs font-medium">Locations Active</span>
-              <MapPin className="w-4 h-4 text-[#EAA2C8]" />
+              <MapPin className="w-4 h-4 text-[#F07BAF]" />
             </div>
             <p className="text-2xl font-bold text-[#242633]">{totalLocations} Zones</p>
             <p className="text-[11px] text-[#686878] mt-0.5">Warehouses & Racks</p>

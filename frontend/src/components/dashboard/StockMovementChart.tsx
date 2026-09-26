@@ -32,7 +32,7 @@ export const StockMovementChart: React.FC = () => {
           <h3 className="text-base font-bold text-[#242633] tracking-tight">
             Stock Velocity Dynamics
           </h3>
-          <p className="text-xs text-[#686878]">Inbound receipts vs outbound dispatch (Last 7 Days)</p>
+          <p className="text-xs font-medium text-[#434553]">Inbound receipts vs outbound dispatch (Last 7 Days)</p>
         </div>
 
         <div className="flex items-center gap-4 text-xs font-semibold">
@@ -41,8 +41,8 @@ export const StockMovementChart: React.FC = () => {
             <span className="text-[#855e30]">Inbound ({totalInbound.toLocaleString()}u)</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-3 h-3 rounded-md bg-[#D0BCE1]" />
-            <span className="text-[#5e4479]">Outbound ({totalOutbound.toLocaleString()}u)</span>
+            <span className="w-3 h-3 rounded-md bg-[#F07BAF]" />
+            <span className="text-[#b32b69]">Outbound ({totalOutbound.toLocaleString()}u)</span>
           </div>
         </div>
       </div>
@@ -61,24 +61,26 @@ export const StockMovementChart: React.FC = () => {
                 <stop offset="95%" stopColor="#DBBA95" stopOpacity={0.02} />
               </linearGradient>
 
-              {/* Outbound Gradient: Lavender Accent #D0BCE1 */}
+              {/* Outbound Gradient: Luminous Rose Accent #F07BAF */}
               <linearGradient id="outboundGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#D0BCE1" stopOpacity={0.7} />
-                <stop offset="95%" stopColor="#D0BCE1" stopOpacity={0.02} />
+                <stop offset="5%" stopColor="#F07BAF" stopOpacity={0.65} />
+                <stop offset="95%" stopColor="#F07BAF" stopOpacity={0.02} />
               </linearGradient>
             </defs>
 
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(238, 232, 227, 0.9)" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(215, 205, 195, 0.75)" />
             <XAxis
               dataKey="day"
               tickLine={false}
               axisLine={false}
-              tick={{ fill: '#686878', fontSize: 11 }}
+              dy={8}
+              tick={{ fill: '#383A48', fontSize: 12, fontWeight: 600 }}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fill: '#686878', fontSize: 11 }}
+              dx={-6}
+              tick={{ fill: '#383A48', fontSize: 12, fontWeight: 600 }}
               tickFormatter={(val) => `${val >= 1000 ? `${(val / 1000).toFixed(1)}k` : val}`}
             />
             <Tooltip
@@ -106,7 +108,7 @@ export const StockMovementChart: React.FC = () => {
             <Area
               type="monotone"
               dataKey="outbound"
-              stroke="#D0BCE1"
+              stroke="#F07BAF"
               strokeWidth={2.5}
               fillOpacity={1}
               fill="url(#outboundGrad)"
@@ -116,12 +118,12 @@ export const StockMovementChart: React.FC = () => {
       </div>
 
       {/* Footer Insight */}
-      <div className="pt-3 border-t border-[#EEE8E3] flex items-center justify-between text-xs text-[#686878]">
+      <div className="pt-3 border-t border-[#EEE8E3] flex items-center justify-between text-xs text-[#434553]">
         <div className="flex items-center gap-1.5">
           <Activity className="w-3.5 h-3.5 text-[#DBBA95]" />
-          <span>Net positive inventory accumulation (+3,230 units)</span>
+          <span className="font-medium">Net positive inventory accumulation (+3,230 units)</span>
         </div>
-        <span className="font-semibold text-[#242633]">Peak: Thu Sep 22</span>
+        <span className="font-bold text-[#242633]">Peak: Thu Sep 22</span>
       </div>
     </div>
   );
